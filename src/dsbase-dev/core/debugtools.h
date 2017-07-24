@@ -56,9 +56,13 @@ typedef struct _svc_status_debug {
 } svc_status_debug;
 
 // For dynamically allowing entities to register debug console functionality
-typedef uint8_t (*debug_handler)(DebugMode mode);
-void debugRegisterInfoHandler(debug_handler handler);
-void debugRegisterStatusHandler(debug_handler handler);
-void debugRegisterActionHandler(debug_handler handler);
+typedef uint8_t (*simple_debug_handler)(DebugMode mode);
+typedef uint8_t (*param_debug_handler)(DebugMode mode, uint8_t * cmdstr);
+typedef struct _debug_entity_context {
+    simple_debug_handler info_handler;
+    simple_debug_handler status_handler;
+    param_debug_handler action_handler;
+} debug_entity_context;
+
 
 #endif /* DEBUGTOOLS_H_ */
