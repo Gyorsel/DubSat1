@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>generaltest_1</name>
+	<name>ss_DATA_can</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -26,35 +26,30 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>dsbase/bsp</name>
+			<name>support/bsp</name>
 			<type>2</type>
-			<locationURI>DSBASE/bsp</locationURI>
+			<locationURI>DSBASE_DEV/bsp</locationURI>
 		</link>
 		<link>
-			<name>dsbase/config</name>
+			<name>support/core</name>
 			<type>2</type>
-			<locationURI>DSBASE/config</locationURI>
+			<locationURI>DSBASE_DEV/core</locationURI>
 		</link>
 		<link>
-			<name>dsbase/core</name>
+			<name>support/interfaces</name>
 			<type>2</type>
-			<locationURI>DSBASE/core</locationURI>
+			<locationURI>DSBASE_DEV/interfaces</locationURI>
 		</link>
 		<link>
-			<name>dsbase/interfaces</name>
+			<name>support/sensors</name>
 			<type>2</type>
-			<locationURI>DSBASE/interfaces</locationURI>
-		</link>
-		<link>
-			<name>dsbase/sensors</name>
-			<type>2</type>
-			<locationURI>DSBASE/sensors</locationURI>
+			<locationURI>DSBASE_DEV/sensors</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
-			<name>DSBASE</name>
-			<value>$%7BPARENT-2-PROJECT_LOC%7D/dsbase</value>
+			<name>DSBASE_DEV</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D/dsbase-dev</value>
 		</variable>
 	</variableList>
 </projectDescription>
