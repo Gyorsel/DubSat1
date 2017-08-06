@@ -12,9 +12,7 @@
 
 #define CONFIGM_debug_consoleinputbuffsize  64
 #define CONFIGM_debug_outputbuffsize        400
-#define CONFIGM_debug_maxinfohandlers       10
-#define CONFIGM_debug_maxstatushandlers     10
-#define CONFIGM_debug_maxactionhandlers     10
+#define CONFIGM_debug_maxentities           15
 
 
 #endif /* CONFIG_CONFIG_SVC_DEBUG_H_ */

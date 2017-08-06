@@ -22,11 +22,11 @@ FILE_STATIC char debugConsoleInputBuff[CONFIGM_debug_consoleinputbuffsize];
 FILE_STATIC uint8_t consoleBytesRead = 0;
 FILE_STATIC uint8_t consoleBuildingCommand = 0;
 
-FILE_STATIC debug_handler registeredInfoHandlers[CONFIGM_debug_maxinfohandlers];
-FILE_STATIC debug_handler registeredStatusHandlers[CONFIGM_debug_maxinfohandlers];
-FILE_STATIC debug_handler registeredActionHandlers[CONFIGM_debug_maxinfohandlers];
+FILE_STATIC debug_context registeredDebugEntities[CONFIGM_debug_maxentities];
+FILE_STATIC uint8_t entityCount = 0;
 
 FILE_STATIC svc_status_debug debug_status;
+
 
 uint8_t debugReportStatusCallback(DebugMode mode)
 {
@@ -57,7 +57,7 @@ void debugInit()
     uartInit();
     uartRegisterRxCallback(debugReadCallback);
 
-    debugRegisterStatusHandler(debugReportStatusCallback);
+    debugRegisterEntity(Entity_DebugService, 'd', NULL, debugReportStatusCallback, NULL);
 }
 
 void debugPrint(uint8_t * buff, uint8_t szBuff)
@@ -117,12 +117,43 @@ void debugReadCallback(uint8_t rcvdbyte)
     }
 }
 
-void coreCallDisplayHandlers(debug_handler *handlers, uint8_t numhandlers)
+void debugRegisterEntity(entityID id, uint8_t pathchar,
+                         simple_debug_handler infohandler, simple_debug_handler statushandler, param_debug_handler actionhandler)
+{
+    if (entityCount >= CONFIGM_debug_maxentities)
+    {
+        debug_status.registration_errors++;
+        return;
+    }
+
+    // TODO:
+    debug_context  *newEntity = &(registeredDebugEntities[entityCount++]);
+    newEntity->id = id;
+    newEntity->pathchar = pathchar;
+    newEntity->info_handler = infohandler;
+    newEntity->status_handler = statushandler;
+    newEntity->action_handler - actionhandler;
+}
+
+void coreCallSimpleHandlers(simple_handler_type t)
 {
     int i;
-    for (i = 0; i < numhandlers; i++)
+    simple_debug_handler handler;
+
+    for (i = 0; i < entityCount; i++)
     {
-        (*handlers[i])(debug_status.debug_mode);
+        if (t == Handler_Info)
+            handler = registeredDebugEntities[i].info_handler;
+        else if (t == Handler_Status)
+            handler = registeredDebugEntities[i].status_handler;
+        else
+        {
+            debug_status.registration_errors++;
+            return;
+        }
+
+        if (handler != NULL)
+            (handler)(debug_status.debug_mode);
         debugPrintF("\r\n");
     }
 }
@@ -130,13 +161,13 @@ void coreCallDisplayHandlers(debug_handler *handlers, uint8_t numhandlers)
 void cmdInfo()
 {
     debugPrintF("Subsystem information (static):\r\n--------------------------------\r\n");
-    coreCallDisplayHandlers(registeredInfoHandlers, debug_status.num_info_handlers);
+    coreCallSimpleHandlers(Handler_Info);
 }
 
 void cmdStatus()
 {
     debugPrintF("Subsystem status (dynamic):\r\n----------------------------\r\n");
-    coreCallDisplayHandlers(registeredStatusHandlers, debug_status.num_status_handlers);
+    coreCallSimpleHandlers(Handler_Status);
 }
 
 void processCommand(uint8_t * cmdbuff, uint8_t cmdlength)
@@ -187,36 +218,6 @@ void displayPrompt()
         debugPrintF(">");
 
 }
-
-uint8_t coreHandlerAdd(debug_handler *handlers, debug_handler handler, uint8_t currentcount, uint8_t maxcount )
-{
-    if (currentcount >= maxcount)
-    {
-        debug_status.registration_errors++;
-        return 0;
-    }
-    handlers[currentcount] = handler;
-    return 1;
-}
-
-void debugRegisterInfoHandler(debug_handler handler)
-{
-    if (coreHandlerAdd(registeredInfoHandlers, handler, debug_status.num_info_handlers, CONFIGM_debug_maxinfohandlers) == 1)
-        debug_status.num_info_handlers++;
-}
-
-void debugRegisterStatusHandler(debug_handler handler)
-{
-    if (coreHandlerAdd(registeredStatusHandlers, handler, debug_status.num_status_handlers, CONFIGM_debug_maxstatushandlers) == 1)
-            debug_status.num_status_handlers++;
-}
-
-void debugRegisterActionHandler(debug_handler handler)
-{
-    if (coreHandlerAdd(registeredActionHandlers, handler, debug_status.num_action_handlers, CONFIGM_debug_maxactionhandlers) == 1)
-            debug_status.num_action_handlers++;
-}
-
 
 
 

@@ -27,8 +27,15 @@ uint8_t infoReport(DebugMode mode)
         debugPrintF("**Subsystem Module: \t%s\r\n", getSubsystemModulePath());
         debugPrintF("Compiler Version:\t%d\r\n", __TI_COMPILER_VERSION__);
         debugPrintF("Standard C Version:\t%d\r\n", __STDC_VERSION__);
-        debugPrintF("Date Compiled:\t%s\r\n", __DATE__);
-        debugPrintF("Time Compiled:\t%s\r\n", __TIME__);
+        debugPrintF("Date Compiled:\t\t%s\r\n", __DATE__);
+        debugPrintF("Time Compiled:\t\t%s\r\n", __TIME__);
+
+#if defined(_INLINE)
+        debugPrintF("INLINE Enabled:\t\tTrue\r\n");
+#else
+        debugPrintF("INLINE Enabled:\t\tFalse\r\n");
+#endif
+
     }
     else
     {

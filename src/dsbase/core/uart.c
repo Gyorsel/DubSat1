@@ -51,7 +51,7 @@ void uartInit()
     uart_status.tx_in_use = 0;
     uart_status.rx_in_use = 0;
 
-    debugRegisterStatusHandler(uartReportStatus);
+    debugRegisterEntity(Entity_UART, 'u', NULL, uartReportStatus, NULL);
 
     BACKCHANNEL_UART_SEL0 &= ~BACKCHANNEL_UART_BITS;
     BACKCHANNEL_UART_SEL1 |= BACKCHANNEL_UART_BITS;

@@ -14,4 +14,6 @@
 #define FILE_STATIC
 #endif
 
+#define NULL ((void*)0)
+
 #endif /* CORE_UTILS_H_ */

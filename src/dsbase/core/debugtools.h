@@ -55,14 +55,34 @@ typedef struct _svc_status_debug {
 
 } svc_status_debug;
 
+typedef enum _entityID {
+    Entity_Test,
+    Entity_DebugService,
+    Entity_I2CBus,
+    Entity_SPIBus,
+    Entity_CANBus,
+    Entity_BSP,
+    Entity_UART,
+} entityID;
+
+typedef enum _simple_handler_type {
+    Handler_Info,
+    Handler_Status,
+} simple_handler_type;
+
 // For dynamically allowing entities to register debug console functionality
 typedef uint8_t (*simple_debug_handler)(DebugMode mode);
 typedef uint8_t (*param_debug_handler)(DebugMode mode, uint8_t * cmdstr);
-typedef struct _debug_entity_context {
+typedef struct _debug_context {
+    entityID id;
+    uint8_t pathchar;
     simple_debug_handler info_handler;
     simple_debug_handler status_handler;
     param_debug_handler action_handler;
-} debug_entity_context;
+} debug_context;
 
+void debugRegisterEntity(entityID id, uint8_t pathchar,
+                         simple_debug_handler infohandler, simple_debug_handler statushandler,
+                         param_debug_handler actionhandler);
 
 #endif /* DEBUGTOOLS_H_ */

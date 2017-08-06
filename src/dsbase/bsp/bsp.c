@@ -49,7 +49,7 @@ void bspInit(SubsystemModule mod)
 
     // Register the system info report function
     // TODO:  Merge systeminfo and BSP, they aren't both needed
-    debugRegisterInfoHandler(infoReport);
+    debugRegisterEntity(Entity_BSP, '&', infoReport, NULL, NULL);
 
     debugTraceF(1,"\r\n-------------------------------------------------------\r\nBSP initialization routine complete.\r\n");
 
