@@ -24,8 +24,11 @@ uint8_t infoReport(DebugMode mode)
 {
     if (mode == InteractiveMode)
     {
-        debugPrintF("**Subsystem Module: %s\r\n", getSubsystemModulePath());
-        debugPrintF("Compiler Version: %f\r\n", 17.0);
+        debugPrintF("**Subsystem Module: \t%s\r\n", getSubsystemModulePath());
+        debugPrintF("Compiler Version:\t%d\r\n", __TI_COMPILER_VERSION__);
+        debugPrintF("Standard C Version:\t%d\r\n", __STDC_VERSION__);
+        debugPrintF("Date Compiled:\t%s\r\n", __DATE__);
+        debugPrintF("Time Compiled:\t%s\r\n", __TIME__);
     }
     else
     {

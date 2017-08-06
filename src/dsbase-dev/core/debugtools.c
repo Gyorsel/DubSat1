@@ -131,14 +131,12 @@ void cmdInfo()
 {
     debugPrintF("Subsystem information (static):\r\n--------------------------------\r\n");
     coreCallDisplayHandlers(registeredInfoHandlers, debug_status.num_info_handlers);
-    displayPrompt();
 }
 
 void cmdStatus()
 {
     debugPrintF("Subsystem status (dynamic):\r\n----------------------------\r\n");
     coreCallDisplayHandlers(registeredStatusHandlers, debug_status.num_status_handlers);
-    displayPrompt();
 }
 
 void processCommand(uint8_t * cmdbuff, uint8_t cmdlength)
