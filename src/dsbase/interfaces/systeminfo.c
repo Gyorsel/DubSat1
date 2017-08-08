@@ -30,12 +30,6 @@ uint8_t infoReport(DebugMode mode)
         debugPrintF("Date Compiled:\t\t%s\r\n", __DATE__);
         debugPrintF("Time Compiled:\t\t%s\r\n", __TIME__);
 
-#if defined(_INLINE)
-        debugPrintF("INLINE Enabled:\t\tTrue\r\n");
-#else
-        debugPrintF("INLINE Enabled:\t\tFalse\r\n");
-#endif
-
     }
     else
     {

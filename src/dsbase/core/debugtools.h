@@ -43,13 +43,7 @@ typedef enum _debugmode {
 
 typedef struct _svc_status_debug {
     uint8_t initialized;
-
-    uint8_t num_info_handlers;
-    uint8_t num_status_handlers;
-    uint8_t num_action_handlers;
-
     uint8_t registration_errors;
-
     uint8_t trace_level;
     DebugMode debug_mode;
 
@@ -64,6 +58,7 @@ typedef enum _entityID {
     Entity_BSP,
     Entity_UART,
 } entityID;
+
 
 typedef enum _simple_handler_type {
     Handler_Info,

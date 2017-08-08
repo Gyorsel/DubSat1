@@ -28,21 +28,25 @@ FILE_STATIC uint8_t entityCount = 0;
 FILE_STATIC svc_status_debug debug_status;
 
 
-uint8_t debugReportStatusCallback(DebugMode mode)
+uint8_t reportStatusCallback(DebugMode mode)
 {
     if (mode == InteractiveMode)
         {
             debugPrintF("**Debug Service Status:\r\n");
             debugPrintF("Trace level: %d\r\n\r\n", debug_status.trace_level);
-            debugPrintF("*Handlers:\r\nInfo: %d\r\nStatus: %d\r\nAction: %d\r\nRegistration errors: %d",
-                        debug_status.num_info_handlers, debug_status.num_status_handlers, debug_status.num_action_handlers,
-                        debug_status.registration_errors);
+            debugPrintF("*Registered Entities: %d\r\n", entityCount);
         }
         else
         {
             debugPrintF("Stuff without as many words (e.g. just CSV)");
         }
         return 1;
+}
+
+uint8_t actionCallback(DebugMode mode, uint8_t * cmdstr)
+{
+    int i = 0;
+    int j = i + 2;
 }
 
 void debugInit()
@@ -57,7 +61,7 @@ void debugInit()
     uartInit();
     uartRegisterRxCallback(debugReadCallback);
 
-    debugRegisterEntity(Entity_DebugService, 'd', NULL, debugReportStatusCallback, NULL);
+    debugRegisterEntity(Entity_DebugService, 'd', NULL, reportStatusCallback, actionCallback);
 }
 
 void debugPrint(uint8_t * buff, uint8_t szBuff)
@@ -132,7 +136,7 @@ void debugRegisterEntity(entityID id, uint8_t pathchar,
     newEntity->pathchar = pathchar;
     newEntity->info_handler = infohandler;
     newEntity->status_handler = statushandler;
-    newEntity->action_handler - actionhandler;
+    newEntity->action_handler = actionhandler;
 }
 
 void coreCallSimpleHandlers(simple_handler_type t)
@@ -170,6 +174,19 @@ void cmdStatus()
     coreCallSimpleHandlers(Handler_Status);
 }
 
+void cmdAction(uint8_t * cmdstr)
+{
+    int i;
+    param_debug_handler handler;
+
+    for (i = 0; i < entityCount; i++)
+    {
+        if (handler != NULL)
+            (handler)(debug_status.debug_mode, cmdstr);
+        debugPrintF("\r\n");
+     }
+}
+
 void processCommand(uint8_t * cmdbuff, uint8_t cmdlength)
 {
     // Someone hits just enter - turn "off" anything noisy going on
@@ -193,6 +210,14 @@ void processCommand(uint8_t * cmdbuff, uint8_t cmdlength)
             debug_status.trace_level = 0;
             cmdStatus();
             break;
+        case '!':
+            debug_status.trace_level = 0;
+            cmdAction(&cmdbuff[1]);
+            break;
+        default:
+            // NOP
+            break;
+
     }
 
     displayPrompt();
@@ -216,7 +241,6 @@ void displayPrompt()
     }
     else
         debugPrintF(">");
-
 }
 
 
